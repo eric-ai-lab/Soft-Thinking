@@ -185,6 +185,19 @@ To achieve optimal results, tune the following hyperparameters:
 > - Results may vary across different devices even with the same hyperparameters, due to differences in computation precision. We use H100 for all experiments.
 > - You can change the model (`model_name`) and dataset (`dataset`) to experiment with other configurations.
 
+
+
+
+## 🪪 Licensing
+This project utilizes a modified version of the [SGLang](https://github.com/sgl-project/sglang) library. The licensing structure is as follows:
+- **Our Original Code**: The code original to this project (i.e. all code outside the `./sglang_soft_thinking_pkg` directory) is licensed under the **MIT License**. A copy of the MIT License can be found in the root `LICENCE` file.
+
+- **Modified SGLang**: The code within the `./sglang_soft_thinking_pkg` directory is a derivative work of `SGLang` (version 0.4.6.post1) and is therefore licensed under **Apache License 2.0**. The orginal Apache 2.0 license is included in the `./sglang_soft_thinking_pkg/LICENSE` file. We have provide a `changes_0.4.6.post1.diff` file in that directory to show our modifications.
+
+
+
+
+
 ## 📜 Citation
 
 If you use this code or dataset, please cite our paper:

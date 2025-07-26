@@ -1,6 +1,6 @@
 # Soft Thinking: Modifications Overview
 
-This document summarizes the differences between this fork and the original sglang (v0.4.6.post1). For a detailed diff, please refer to `diff_0.4.6.post1.txt`.
+This document summarizes the differences between this fork and the original sglang (v0.4.6.post1). For a detailed diff, please refer to `changes_0.4.6.post1.diff`.
 
 All added or modified code is clearly marked with:
 ```python
