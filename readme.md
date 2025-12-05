@@ -102,6 +102,10 @@ docker run --gpus all --ipc=host --rm -it \
 
 ## 🔄 Reproduction Instructions
 
+> [!WARNING]
+> 1. Soft thinking yields suboptimal results on **smaller models (≤7B or even ≤14B)**. We attribute this to limited hidden sizes, causing the last hidden state to lie in proximity to unrelated embeddings, thereby introducing substantial noise during probability weighting.
+> 2. Additionally, precision issues may arise due to insufficient VRAM, which may lead to lower performance. Please try gradually decreasing `--max_running_requests` (start from 400 to 1) to keep token usage below 90% during inference or ensure no offloading occurs and the same operator (https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/). Please refer to https://github.com/eric-ai-lab/Soft-Thinking/issues/17 if you have limited GPU memory. If you would like to contribute to deterministic Soft Thinking, please feel free to contact me!!!
+
 ### ⚖️ 1. LLM Judge
 **Use your own OpenAI key in each script.**
 ```bash
