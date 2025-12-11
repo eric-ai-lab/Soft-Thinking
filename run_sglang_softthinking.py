@@ -24,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser(description='Process some parameters for text generation.')
     parser.add_argument('--dataset', type=str, choices=["math500", "aime2024", "aime2025", "gpqa_diamond", "gsm8k", "amc23", "humaneval", "mbpp", "livecodebench"], help='Name of dataset')
     parser.add_argument('--sampling_backend', type=str, choices=["pytorch", "flashinfer"], default="flashinfer", help='Sampling backend')
-    parser.add_argument('--model_name', type=str, required=True, default="DeepSeek-R1-Distill-Qwen-1.5B", help='Model name or path')
+    parser.add_argument('--model_name', type=str, required=True, default="Qwen/QwQ-32B", help='Model name or path')
     parser.add_argument('--num_gpus', type=int, default=8, help='GPU number (tensor parallel size, tp_size)')
     parser.add_argument('--cuda_graph_max_bs', type=int, default=None, help='Max number of batch runned in one time.')
     parser.add_argument('--max_running_requests', type=int, default=None, help='Max number of requests runned together.')
