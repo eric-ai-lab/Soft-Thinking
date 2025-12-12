@@ -82,6 +82,27 @@ asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 _is_cuda = is_cuda()
 
 
+def _get_or_create_event_loop() -> asyncio.AbstractEventLoop:
+    """Return a usable event loop for synchronous APIs.
+
+    Python 3.11 tightened `asyncio.get_event_loop()` semantics and uvloop raises
+    if no loop has been set for the current thread. For sync entrypoints (like
+    `Engine.generate()`), we create and set a loop on-demand.
+    """
+    try:
+        # If we're already inside an async context, prefer the running loop.
+        return asyncio.get_running_loop()
+    except RuntimeError:
+        pass
+
+    try:
+        return asyncio.get_event_loop()
+    except RuntimeError:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        return loop
+
+
 class Engine(EngineBase):
     """
     The entry point to the inference engine.
@@ -180,7 +201,7 @@ class Engine(EngineBase):
             return_hidden_states=return_hidden_states,
             stream=stream,
         )
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         generator = self.tokenizer_manager.generate_request(obj, None)
 
         if stream:
@@ -266,7 +287,7 @@ class Engine(EngineBase):
         Please refer to `EmbeddingReqInput` for the documentation.
         """
         obj = EmbeddingReqInput(text=prompt, image_data=image_data)
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         generator = self.tokenizer_manager.generate_request(obj, None)
         ret = loop.run_until_complete(generator.__anext__())
         return ret
@@ -283,18 +304,18 @@ class Engine(EngineBase):
         return False
 
     def flush_cache(self):
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(self.tokenizer_manager.flush_cache())
 
     def start_profile(self):
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         loop.run_until_complete(self.tokenizer_manager.start_profile())
 
     def stop_profile(self):
         self.tokenizer_manager.stop_profile()
 
     def get_server_info(self):
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         internal_states = loop.run_until_complete(
             self.tokenizer_manager.get_internal_state()
         )
@@ -324,7 +345,7 @@ class Engine(EngineBase):
             group_name=group_name,
             backend=backend,
         )
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.init_weights_update_group(obj, None)
         )
@@ -336,7 +357,7 @@ class Engine(EngineBase):
             dtype=dtype,
             shape=shape,
         )
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.update_weights_from_distributed(obj, None)
         )
@@ -357,7 +378,7 @@ class Engine(EngineBase):
             load_format=load_format,
             flush_cache=flush_cache,
         )
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.update_weights_from_tensor(obj, None)
         )
@@ -378,7 +399,7 @@ class Engine(EngineBase):
             load_format=load_format,
         )
 
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.update_weights_from_disk(obj, None)
         )
@@ -386,7 +407,7 @@ class Engine(EngineBase):
     def get_weights_by_name(self, name: str, truncate_size: int = 100):
         """Get weights by parameter name."""
         obj = GetWeightsByNameReqInput(name=name, truncate_size=truncate_size)
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.get_weights_by_name(obj, None)
         )
@@ -394,7 +415,7 @@ class Engine(EngineBase):
     def release_memory_occupation(self):
         """Release GPU occupation temporarily."""
         obj = ReleaseMemoryOccupationReqInput()
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.release_memory_occupation(obj, None)
         )
@@ -402,7 +423,7 @@ class Engine(EngineBase):
     def resume_memory_occupation(self):
         """Resume GPU occupation."""
         obj = ResumeMemoryOccupationReqInput()
-        loop = asyncio.get_event_loop()
+        loop = _get_or_create_event_loop()
         return loop.run_until_complete(
             self.tokenizer_manager.resume_memory_occupation(obj, None)
         )
