@@ -77,12 +77,21 @@ We find it hard to reproduce some results across different devices due to precis
 
 ```bash
 # For Docker
-cd Soft-Thinking
-docker build -t soft-thinking:st-cu124-py311 .
-# NVIDIA Container Toolkit is required
-docker run --gpus all --ipc=host --rm -it \
-  -v $PWD:/workspace \
-  soft-thinking:st-cu124-py311 bash
+docker run -it --name h100_zz --gpus all \
+    --shm-size 32g \
+    --network host \
+    -v /.cache:/root/.cache \
+    -v <path_to_your_workspace>:/workspace \
+    --env "HF_TOKEN=<huggingface_token>" \
+    --ipc=host \
+    lmsysorg/sglang:latest \
+    /bin/bash
+
+docker start -i h100_st
+
+cd /workspace/Soft-Thinking
+
+bash xx.sh
 ```
 
 ## 🚀 Quick Start
