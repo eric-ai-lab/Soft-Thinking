@@ -751,7 +751,7 @@ class Req:
 
             if self.sampling_params.think_end_str_id == self.output_ids[-1]:
                 # 退出 soft thinking 模式并将 topk 设置为 one-hot
-                self.sampling_params.soft_thinking_mode = False
+                self.sampling_params.soft_thinking_mode = torch.tensor(False, dtype=torch.bool, device='cuda')  # 'cuda' aligns with previous setting
                 # 一键清零再设置 head
                 self.topk_prob[1:].fill_(0)
                 self.topk_idx[1:].fill_(0)

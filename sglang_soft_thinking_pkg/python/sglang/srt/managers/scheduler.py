@@ -1439,6 +1439,9 @@ class Scheduler(
     ):
         if batch.forward_mode.is_decode():
             self.process_batch_result_decode(batch, result, launch_done)
+            if self.server_args.enable_soft_thinking:
+                # update sampling_info.soft_thinking_modes for next sampling
+                batch.sampling_info.soft_thinking_modes = torch.stack([req.sampling_params.soft_thinking_mode for req in batch.reqs], dim=0)
         elif batch.forward_mode.is_extend():
             self.process_batch_result_prefill(batch, result, launch_done)
         elif batch.forward_mode.is_idle():
