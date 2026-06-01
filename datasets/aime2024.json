@@ -204,7 +204,7 @@
         "value": "Eight circles of radius $34$ can be placed tangent to $\\overline{BC}$ of $\\triangle ABC$ so that the circles are sequentially tangent to each other, with the first circle being tangent to $\\overline{AB}$ and the last circle being tangent to $\\overline{AC}$, as shown. Similarly, $2024$ circles of radius $1$ can be placed tangent to $\\overline{BC}$ in the same manner. The inradius of $\\triangle ABC$ can be expressed as $\\frac{m}{n}$, where $m$ and $n$ are relatively prime positive integers. Find $m+n$.\n\n<asy>\npair A = (2,1); pair B = (0,0); pair C = (3,0);\ndot(A^^B^^C);\nlabel(\"$A$\", A, N); label(\"$B$\", B, S); label(\"$C$\", C, S);\ndraw(A--B--C--cycle);\nfor(real i=0.62; i<2.7; i+=0.29){\ndraw(circle((i,0.145), 0.145));\n}\n</asy>"
       }
     ],
-    "final_answer": "480"
+    "final_answer": "197"
   },
   {
     "prompt": [
